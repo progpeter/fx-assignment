@@ -1,0 +1,37 @@
+﻿@using KnabFX.Domain.Entities.Cryptocurrency
+<h3>Rates</h3>
+
+<form asp-action="Rates" asp-controller="Home" method="post">
+    <input type="text" name="symbol" />
+    <button type="submit" class="btn-success" >Get Rates</button>
+</form>
+
+@if (ViewBag.Rates != null)
+{
+    <table class="table table-responsive table-light">
+        <thead>
+            <tr>
+                <th>Currency</th>
+                <th>Price</th>
+                <th>Price Updated On (GMT)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+
+                List<CryptoRate> rates = (List<CryptoRate>)ViewBag.Rates;
+                foreach (CryptoRate rate in rates)
+                {
+                    <tr>
+                        <td>@rate.Symbol/@rate.ExCurrency</td>
+                        <td>@String.Format("{0:n3}", @rate.Price)</td>
+                        <td>@rate.LastUpdatedOn.ToString("T")</td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+}
+@if(!string.IsNullOrEmpty(ViewBag.ErrorMessage)){
+    <label class="alert-danger">@ViewBag.ErrorMessage</label>
+}
