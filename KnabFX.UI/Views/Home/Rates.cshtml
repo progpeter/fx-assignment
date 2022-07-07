@@ -1,8 +1,8 @@
 ﻿@using KnabFX.Domain.Entities.Cryptocurrency
-<h3>Rates</h3>
+<h3>Crypto Rates</h3>
 
 <form asp-action="Rates" asp-controller="Home" method="post">
-    <input type="text" name="symbol" />
+    <input type="text" name="symbol" placeholder="Enter Crypto Symbol (ex. BTC)" style="width: 250px"/>
     <button type="submit" class="btn-success" >Get Rates</button>
 </form>
 

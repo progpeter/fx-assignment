@@ -19,10 +19,11 @@ namespace KnabFX.Infrastructure.Services.Cryptocurrency
         {
             CryptoQuote cryptoQuote = _cacheProvider.Get(cryptoSymbol);
 
-            if(cryptoQuote == null)
+            if (cryptoQuote == null)
             {
                 cryptoQuote = await _cryptoRatesService.GetCryptoQuote(cryptoSymbol);
-                _cacheProvider.Set(cryptoSymbol, cryptoQuote);
+                if (cryptoQuote != null)
+                    _cacheProvider.Set(cryptoSymbol, cryptoQuote);
             }
 
             return cryptoQuote;

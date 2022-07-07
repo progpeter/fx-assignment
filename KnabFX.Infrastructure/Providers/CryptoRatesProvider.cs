@@ -44,6 +44,8 @@ namespace KnabFX.Infrastructure.Providers
                 _logger.LogError($"Failed to get Crypto Quote for {cryptoSymbol}");
                 return null;
             }
+            
+            List<CryptoRate> cryptoRates = new List<CryptoRate>();
 
             _logger.LogInformation($"Getting Base Currency Exchange Rates for {_baseCurrency}");
 
@@ -55,14 +57,17 @@ namespace KnabFX.Infrastructure.Providers
                 return null;
             }
 
-            List<CryptoRate> cryptoRates = new List<CryptoRate>();
-
             double baseCurrencyPrice = cryptoQuote.Quote[_baseCurrency].Price;
+            
+            // Add base crypto / base_currency rate
+            cryptoRates.Add(new CryptoRate(cryptoQuote.Symbol, _baseCurrency, baseCurrencyPrice, DateTimeOffset.FromUnixTimeSeconds(cryptoQuote.LastUpdatedOnSeconds)));
+           
+            if (currencyRate == null)
+            {
+                return cryptoRates;
+            }
 
             DateTimeOffset lastUpdatedOn = DateTimeOffset.FromUnixTimeSeconds(Math.Max(cryptoQuote.LastUpdatedOnSeconds, currencyRate.LastUpdatedOn));
-
-            // Add base crypto / base_currency rate
-            cryptoRates.Add(new CryptoRate(cryptoQuote.Symbol, _baseCurrency, baseCurrencyPrice, lastUpdatedOn));
 
             // Convert crypto/base_currency into other convertiable currencies
             foreach (var currency in currencyRate.Rates)
